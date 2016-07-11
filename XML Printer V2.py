@@ -51,6 +51,3 @@ def writeCSV():
     except UnicodeEncodeError:
         pass
 writeCSV()
-print len(doc_title)
-print len(doc_periodical)
-print len(doc_year)
