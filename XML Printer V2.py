@@ -1,3 +1,4 @@
+#Final version of the code
 import xmltodict
 import csv
 
@@ -58,4 +59,6 @@ outputWriter.writerow(['Periodical:'])
 outputWriter.writerow(doc_periodical)
 outputWriter.writerow(['Year:'])
 outputWriter.writerow(doc_year)
+outputWriter.writerow('')
+outputWriter.writerow(['Each column is a separate record.'])
 outputFile.close()
