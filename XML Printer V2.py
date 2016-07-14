@@ -8,7 +8,7 @@ doc_periodical = []
 doc_year = []
 outputFile = open('output.csv', 'wb')
 
-with open("H:\Pubs_basedon_TCIA.xml") as f:
+with open("H:\Pubs_basedon_TCIA0716.xml") as f:
     doc = xmltodict.parse(f.read())
 
 for i in range(0,len(doc['xml']['records']['record'])):
@@ -27,22 +27,33 @@ for i in range(0,len(doc["xml"]["records"]["record"])):
         try:
             docyeartemp = doc["xml"]["records"]["record"][i]["dates"]["year"][u'style']["#text"]
             doc_year.append(docyeartemp)
+            print docyeartemp
             
             doctitletemp = doc["xml"]["records"]["record"][i]["titles"]["title"][u'style']["#text"]
             doc_title.append(doctitletemp)
+            print doctitletemp
             
             docperiodicaltemp = doc["xml"]["records"]["record"][i]["periodical"]["full-title"][u'style']["#text"]
-            doc_periodical.append(docperiodicaltemp)            
-        except KeyError:
-            docperiodicaltemp = doc["xml"]["records"]["record"][1]["alt-periodical"]["full-title"][u'style']["#text"]
             doc_periodical.append(docperiodicaltemp)
+            print docperiodicaltemp
+        except KeyError:
+            try:
+                docperiodicaltemp = doc["xml"]["records"]["record"][i]["alt-periodical"]["full-title"][u'style']["#text"]
+                doc_periodical.append(docperiodicaltemp)
+                print docperiodicaltemp
+            except KeyError:
+                docperiodicaltemp = 'None'
+                doc_periodical.append(docperiodicaltemp)
+                print docperiodicaltemp
         except TypeError:
             try:
                 doctitletemp = doc["xml"]["records"]["record"][i]["titles"]["title"][u'style'][0]["#text"]
                 doc_title.append(doctitletemp)
+                print doctitletemp
             except KeyError:
                 doctitletemp = doc["xml"]["records"]["record"][i]["titles"]["title"][u'style'][0][0]["#text"]
                 doc_title.append(doctitletemp)
+                print doctitletemp
 
 doc_authors = [[y.encode('UTF8') for y in x] for x in doc_authors]
 doc_title = [x.encode('UTF8') for x in doc_title]
