@@ -1,5 +1,5 @@
 # XML-Parser
-A WIP script for extracting publication data from the Cancer Imaging Archive publication list (last updated May 2018).
+A WIP script for extracting publication data from the Cancer Imaging Archive publication list (last updated May 2018). Requires the `bs4` module, you can install it by doing `pip install bs4`.
 
 Example output:
 
@@ -31,6 +31,3 @@ Alternatively:
   <periodical>Journal of Medical Imaging and Health Informatics</periodical>, 2016
   <pub-type> - Journal Article</pub-type>
 </html>
-
-
-Requires the `bs4` module, you can install it by doing `pip install bs4`
