@@ -3,7 +3,6 @@ A WIP script for extracting publication data from the Cancer Imaging Archive pub
 
 Example output:
 
-{::nomarkdown}
 <html>
   <table style="width:100%">
     <tr>
@@ -23,4 +22,12 @@ Example output:
 
   </table>
 </html>
-{:/}
+
+Alternatively:
+<html>
+<h3>Robust Computer-Aided Detection of Pulmonary Nodules from Chest Computed Tomography</h3>
+  Abduh, Zaid; Wahed, Manal Abdel; Kadah, Yasser M
+  <br>
+  <periodical>Journal of Medical Imaging and Health Informatics</periodical>, 2016
+  <pub-type> - Journal Article</pub-type>
+</html>
