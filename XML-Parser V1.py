@@ -1,4 +1,4 @@
-#Updated to work with Conference Proceedings
+#This is the old script from 2016. For the updated version, use V2 instead.
 import xmltodict
 import csv
 
