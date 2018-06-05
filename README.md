@@ -31,3 +31,5 @@ Alternatively:
   <periodical>Journal of Medical Imaging and Health Informatics</periodical>, 2016
   <pub-type> - Journal Article</pub-type>
 </html>
+
+Requires the `bs4` module, you can install it by doing `pip install bs4`
