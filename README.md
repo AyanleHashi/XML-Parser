@@ -1,2 +1,2 @@
 # XML-Parser
-For extracting information from Pubs_basedon_TCIA0716.xml
+A WIP script for extracting publication data from the Cancer Imaging Archive publication list (last updated May 2018).
