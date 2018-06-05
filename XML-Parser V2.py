@@ -13,6 +13,7 @@ class Record:
         "\nPeriodical: " + self.periodical + "\nYear: " + self.year +\
         "\nPublication Type: " + self.pubtype
 
+#Change file location as necessary
 with open("C:\\Users\\hashiam\\Desktop\\Python Scripts\\Pubs_basedon_TCIA0518.xml",encoding="utf8") as f:
     xml = f.read()
 
