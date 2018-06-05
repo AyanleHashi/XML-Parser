@@ -32,4 +32,5 @@ Alternatively:
   <pub-type> - Journal Article</pub-type>
 </html>
 
+
 Requires the `bs4` module, you can install it by doing `pip install bs4`
