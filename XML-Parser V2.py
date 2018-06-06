@@ -7,11 +7,14 @@ class Record:
         self.periodical = periodical
         self.year = year
         self.pubtype = pubtype
-    
+
     def __str__(self):
         return "Authors: " + self.authors + "\nTitle: " + self.title +\
         "\nPeriodical: " + self.periodical + "\nYear: " + self.year +\
         "\nPublication Type: " + self.pubtype
+
+    def tuple_form(self):
+        return (self.authors,self.title,self.periodical,self.year,self.pubtype)
 
 with open("C:\\Users\\hashiam\\Desktop\\Python Scripts\\Pubs_basedon_TCIA0518.xml",encoding="utf8") as f:
     xml = f.read()
@@ -34,20 +37,19 @@ for record in soup.xml.records:
     records.append(Record(authors,title,periodical,year,pubtype))
 
 row = ""
-#The following for loop only looks at the first record; remove the '[:1]' if you
-#would like to process the whole document.
-for r in records[:1]:
+#The following for loop only looks at the first record; remove the '[:1]' if
+#you would like to process the whole document.
+for r in records:
         row += """    <tr>
-        <td>{}</td>
-        <td>{}</td>
-        <td>{}</td>
-        <td>{}</td>
-        <td>{}</td>
+        <td>%s</td>
+        <td>%s</td>
+        <td>%s</td>
+        <td>%s</td>
+        <td>%s</td>
     </tr>
-""".format(r.authors,r.title,r.periodical,r.year,r.pubtype)
+""" % r.tuple_form()
 
-with open("output.txt","w") as html:
-    html_table = """HTML Table:
+html_table = """HTML Table:
 <html>
   <table style=\"width:100%\">
     <tr>
@@ -69,13 +71,14 @@ table, th, td {{
 th {{
     text-align: left;
 }}""".format(row)
-    paperpile = """\n\nPaperPile Format:
+
+paperpile = """\n\nPaperPile Format:
 <html>
-<h3>{}</h3>
-  {}
+<h3>%s</h3>
+  %s
   <br>
-  <periodical>{}</periodical>, {}
-  <pub-type> - {}</pub-type>
+  <periodical>%s</periodical>, %s
+  <pub-type> - %s</pub-type>
 </html>
 
 CSS:
@@ -89,7 +92,9 @@ periodical {{
 
 pub-type {{
   color: LightGray;
-}}""".format(records[0].title,records[0].authors,records[0].periodical,records[0].year,records[0].pubtype)
+}}""" % records[0].tuple_form()
+
+with open("output.txt","w",encoding="utf8") as html:
     html.write(html_table)
     html.write(paperpile)
 
