@@ -1,5 +1,5 @@
 # XML-Parser
-A WIP script for extracting publication data from the Cancer Imaging Archive publication list (last updated May 2018). Requires the `bs4` module, you can install it by doing `pip install bs4`.
+A WIP script for extracting publication data from the Cancer Imaging Archive publication list (last updated May 2018). Requires the `bs4` module and the lxml tree builder, you can install them by doing `pip install bs4` and `pip install lxml`.
 
 Example output:
 
