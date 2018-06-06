@@ -18,7 +18,7 @@ with open("C:\\Users\\hashiam\\Desktop\\Python Scripts\\Pubs_basedon_TCIA0518.xm
     xml = f.read()
 
 records = []
-soup = BeautifulSoup(xml,"xml")
+soup = BeautifulSoup(xml,"lxml")
 
 for record in soup.xml.records:
     authors = ""
