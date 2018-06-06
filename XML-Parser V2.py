@@ -1,20 +1,20 @@
 from bs4 import BeautifulSoup
 
 class Record:
-    def __init__(self,authors="",title="",periodical="",year="",pubtype=""):
+    def __init__(self,authors="",title="",periodical="",year="",pubtype="",url="",abstract=""):
         self.authors = authors
         self.title = title
         self.periodical = periodical
         self.year = year
         self.pubtype = pubtype
-
+        self.url = url
+        self.abstract = abstract
+    
     def __str__(self):
-        return "Authors: " + self.authors + "\nTitle: " + self.title +\
-        "\nPeriodical: " + self.periodical + "\nYear: " + self.year +\
-        "\nPublication Type: " + self.pubtype
-
+        return url
+    
     def tuple_form(self):
-        return (self.title,self.authors,self.periodical,self.year,self.pubtype)
+        return (self.title,self.authors,self.periodical,self.year,self.pubtype,self.url,self.abstract)
 
 with open("C:\\Users\\hashiam\\Desktop\\Python Scripts\\Pubs_basedon_TCIA0518.xml",encoding="utf8") as f:
     xml = f.read()
@@ -29,16 +29,26 @@ for record in soup.xml.records:
     authors = authors[:-2]
     title = record.titles.title.text
     try:
-        periodical = record.periodical.find_all("full-title")[0].text
+        periodical = record.periodical.find_all("full-title")[0].text + ", "
     except AttributeError:
-        periodical = ""
+        pass
     year = record.dates.year.text
     pubtype = record.find_all("ref-type")[0]["name"]
-    records.append(Record(authors,title,periodical,year,pubtype))
+    try:
+        url = record.urls.find_all("related-urls")[0].url.text
+    except IndexError:
+        pass
+    try:
+        abstract = record.abstract.text
+    except AttributeError:
+        pass
+    records.append(Record(authors,title,periodical,year,pubtype,url,abstract))
 
 row = ""
 for r in records:
-        row += """    <tr>
+    row += """    <tr>
+        <td>%s</td>
+        <td>%s</td>
         <td>%s</td>
         <td>%s</td>
         <td>%s</td>
@@ -49,12 +59,14 @@ for r in records:
 
 entry = ""
 for r in records:
-    entry += """
+    entry += """  
   <h3>%s</h3>
   %s
   <br>
   <periodical>%s</periodical> %s
   <pub-type> - %s</pub-type>
+  <br>
+  <a href="%s">Website</a> - %s
  """ % r.tuple_form()
 
 table_html = """<html>
@@ -94,7 +106,10 @@ paperpile_html = """<html>
       margin-bottom: 0px;
       color: #000066;
     }}
-  </style>
+    a {{
+      text-decoration: none;
+    }}
+  </style>  
   {}
 </html>
 """.format(entry)
