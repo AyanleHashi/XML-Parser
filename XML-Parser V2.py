@@ -46,7 +46,8 @@ for r in records[:1]:
     </tr>
 """.format(r.authors,r.title,r.periodical,r.year,r.pubtype)
 
-print("""HTML Table:
+with open("output.txt","w") as html:
+    html_table = """HTML Table:
 <html>
   <table style=\"width:100%\">
     <tr>
@@ -67,9 +68,8 @@ table, th, td {{
 }}
 th {{
     text-align: left;
-}}""".format(row))
-
-print("""\n\n\nPaperPile Format:
+}}""".format(row)
+    paperpile = """\n\nPaperPile Format:
 <html>
 <h3>{}</h3>
   {}
@@ -89,4 +89,9 @@ periodical {{
 
 pub-type {{
   color: LightGray;
-}}""".format(records[0].title,records[0].authors,records[0].periodical,records[0].year,records[0].pubtype))
+}}""".format(records[0].title,records[0].authors,records[0].periodical,records[0].year,records[0].pubtype)
+    html.write(html_table)
+    html.write(paperpile)
+
+print(html_table)
+print(paperpile)
