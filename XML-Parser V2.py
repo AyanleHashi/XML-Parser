@@ -37,8 +37,6 @@ for record in soup.xml.records:
     records.append(Record(authors,title,periodical,year,pubtype))
 
 row = ""
-#The following for loop only looks at the first record; remove the '[:1]' if
-#you would like to process the whole document.
 for r in records:
         row += """    <tr>
         <td>%s</td>
