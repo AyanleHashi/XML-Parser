@@ -42,7 +42,8 @@ for record in soup.xml.records:
         abstract = record.abstract.text
     except AttributeError:
         pass
-    records.append(Record(authors,title,periodical,year,pubtype,url,abstract))
+    if pubtype[0] in "JC":
+        records.append(Record(authors,title,periodical,year,pubtype,url,abstract))
 
 row = ""
 for r in records:
