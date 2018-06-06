@@ -31,7 +31,7 @@ for record in soup.xml.records:
     try:
         periodical = record.periodical.find_all("full-title")[0].text
     except AttributeError:
-        periodical = "Unnamed Publication"
+        periodical = ""
     year = record.dates.year.text
     pubtype = record.find_all("ref-type")[0]["name"]
     records.append(Record(authors,title,periodical,year,pubtype))
@@ -53,7 +53,7 @@ for r in records:
   <h3>%s</h3>
   %s
   <br>
-  <periodical>%s</periodical>, %s
+  <periodical>%s</periodical> %s
   <pub-type> - %s</pub-type>
  """ % r.tuple_form()
 
