@@ -13,7 +13,6 @@ class Record:
         "\nPeriodical: " + self.periodical + "\nYear: " + self.year +\
         "\nPublication Type: " + self.pubtype
 
-#Change file location as necessary
 with open("C:\\Users\\hashiam\\Desktop\\Python Scripts\\Pubs_basedon_TCIA0518.xml",encoding="utf8") as f:
     xml = f.read()
 
@@ -35,6 +34,8 @@ for record in soup.xml.records:
     records.append(Record(authors,title,periodical,year,pubtype))
 
 row = ""
+#The following for loop only looks at the first record; remove the '[:1]' if you
+#would like to process the whole document.
 for r in records[:1]:
         row += """    <tr>
         <td>{}</td>
@@ -45,7 +46,8 @@ for r in records[:1]:
     </tr>
 """.format(r.authors,r.title,r.periodical,r.year,r.pubtype)
 
-print("""<html>
+print("""HTML Table:
+<html>
   <table style=\"width:100%\">
     <tr>
       <th>Authors</th>
@@ -58,6 +60,8 @@ print("""<html>
   </table>
 </html>
 
+CSS:
+
 table, th, td {{
     border: 1px solid black;
 }}
@@ -65,7 +69,7 @@ th {{
     text-align: left;
 }}""".format(row))
 
-print("""
+print("""\n\n\nPaperPile Format:
 <html>
 <h3>{}</h3>
   {}
@@ -73,6 +77,8 @@ print("""
   <periodical>{}</periodical>, {}
   <pub-type> - {}</pub-type>
 </html>
+
+CSS:
 
 html {{
   font-family: "Arial";
