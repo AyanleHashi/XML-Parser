@@ -88,6 +88,8 @@ table_html = """<html>
       <th>Periodical</th>
       <th>Year</th>
       <th>Publication Type</th>
+      <th>URL</th>
+      <th>Abstract</th>
     </tr>
 {}
   </table>
