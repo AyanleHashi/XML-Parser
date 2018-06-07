@@ -31,18 +31,18 @@ for record in soup.xml.records:
     try:
         periodical = record.periodical.find_all("full-title")[0].text + ", "
     except AttributeError:
-        pass
+        periodical = ""
     year = record.dates.year.text
     pubtype = record.find_all("ref-type")[0]["name"]
     try:
         url = record.urls.find_all("related-urls")[0].url.text
     except IndexError:
-        pass
+        url = ""
     try:
         abstract = record.abstract.text
     except AttributeError:
-        pass
-    if pubtype[0] in "JC":
+        abstract = ""
+    if pubtype in ["Journal Article","Conference Proceedings"]:
         records.append(Record(authors,title,periodical,year,pubtype,url,abstract))
 
 row = ""
