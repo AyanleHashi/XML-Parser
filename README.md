@@ -11,6 +11,7 @@ Example output:
   <pub-type> - Journal Article</pub-type>
 </html>
 
+
 Alternatively:
 <html>
   <table style="width:100%">
