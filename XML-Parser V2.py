@@ -1,7 +1,8 @@
 from bs4 import BeautifulSoup
 
 class Record:
-    def __init__(self,authors="",title="",periodical="",year="",pubtype="",url="",abstract=""):
+    def __init__(self,authors="",title="",periodical="",year="",pubtype="",
+                 url="",abstract=""):
         self.authors = authors
         self.title = title
         self.periodical = periodical
@@ -35,7 +36,7 @@ for record in soup.xml.records:
     year = record.dates.year.text
     pubtype = record.find_all("ref-type")[0]["name"]
     try:
-        url = record.urls.find_all("related-urls")[0].url.text
+        url = "<a href=\"" + record.urls.find_all("related-urls")[0].url.text + "\">Website</a> - "
     except IndexError:
         url = ""
     try:
@@ -61,13 +62,13 @@ for r in records:
 entry = ""
 for r in records:
     entry += """  
-  <h3>%s</h3>
+  <h4>%s</h4>
   %s
   <br>
-  <periodical>%s</periodical> %s
+  <i><periodical>%s</periodical></i> %s
   <pub-type> - %s</pub-type>
   <br>
-  <a href="%s">Website</a> - %s
+  %s%s
  """ % r.tuple_form()
 
 table_html = """<html>
@@ -103,7 +104,7 @@ paperpile_html = """<html>
     pub-type {{
       color: #666666;
     }}
-    h3 {{
+    h4 {{
       margin-bottom: 0px;
       color: #000066;
     }}
