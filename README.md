@@ -9,6 +9,7 @@ Example output:
   <br>
   <periodical>Journal of Medical Imaging and Health Informatics</periodical>, 2016
   <pub-type> - Journal Article</pub-type>
+  <br>
 </html>
 
 
