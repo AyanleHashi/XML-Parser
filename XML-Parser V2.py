@@ -1,8 +1,7 @@
 from bs4 import BeautifulSoup
 
 class Record:
-    def __init__(self,authors="",title="",periodical="",year="",pubtype="",
-                 url="",abstract=""):
+    def __init__(self,authors="",title="",periodical="",year="",pubtype="",url="",abstract=""):
         self.authors = authors
         self.title = title
         self.periodical = periodical
@@ -17,12 +16,12 @@ class Record:
     def tuple_form(self):
         return (self.title,self.authors,self.periodical,self.year,self.pubtype,self.url,self.abstract)
 
-with open("C:\\Users\\hashiam\\Desktop\\Python Scripts\\Pubs_basedon_TCIA0518.xml",encoding="utf8") as f:
+with open("C:\\Users\\hashiam\\Desktop\\Python Scripts\\Pubs_basedon_TCIA0618.xml",encoding="utf8") as f:
     xml = f.read()
 
 records = []
 soup = BeautifulSoup(xml,"lxml")
-
+#TODO: Fix the dash aftera website when there is no abstract
 for record in soup.xml.records:
     authors = ""
     for author in record.contributors.authors:
@@ -46,6 +45,46 @@ for record in soup.xml.records:
     if pubtype in ["Journal Article","Conference Proceedings"]:
         records.append(Record(authors,title,periodical,year,pubtype,url,abstract))
 
+entry = ""
+for r in records:
+    entry += """  
+  <h4>%s</h4>
+  %s
+  <br>
+  <i><periodical>%s</periodical></i> %s
+  <pub-type> - %s</pub-type>
+  <br>
+  %s%s
+ """ % r.tuple_form()
+
+paperpile_html = """<html>
+  <style>
+    html {{
+      font-family: "Helvetica";
+    }}
+    periodical {{
+      color: green;
+    }}
+    pub-type {{
+      color: #666666;
+    }}
+    h4 {{
+      margin-bottom: 0px;
+      color: #000066;
+    }}
+    a {{
+      text-decoration: none;
+    }}
+  </style>  
+  {}
+</html>
+""".format(entry)
+
+with open("paperpile.html","w",encoding="utf8") as paperpile_html_file:
+    paperpile_html_file.write(paperpile_html)
+
+#------------------------------------------------------------------------------
+
 row = ""
 for r in records:
     row += """    <tr>
@@ -58,18 +97,6 @@ for r in records:
         <td>%s</td>
     </tr>
 """ % r.tuple_form()
-
-entry = ""
-for r in records:
-    entry += """  
-  <h4>%s</h4>
-  %s
-  <br>
-  <i><periodical>%s</periodical></i> %s
-  <pub-type> - %s</pub-type>
-  <br>
-  %s%s
- """ % r.tuple_form()
 
 table_html = """<html>
   <style>
@@ -95,31 +122,5 @@ table_html = """<html>
   </table>
 </html>""".format(row)
 
-paperpile_html = """<html>
-  <style>
-    html {{
-      font-family: "Helvetica";
-    }}
-    periodical {{
-      color: green;
-    }}
-    pub-type {{
-      color: #666666;
-    }}
-    h4 {{
-      margin-bottom: 0px;
-      color: #000066;
-    }}
-    a {{
-      text-decoration: none;
-    }}
-  </style>  
-  {}
-</html>
-""".format(entry)
-
 with open("table.html","w",encoding="utf8") as table_html_file:
     table_html_file.write(table_html)
-
-with open("paperpile.html","w",encoding="utf8") as paperpile_html_file:
-    paperpile_html_file.write(paperpile_html)
