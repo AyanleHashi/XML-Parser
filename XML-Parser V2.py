@@ -21,7 +21,6 @@ with open("C:\\Users\\hashiam\\Desktop\\Python Scripts\\Pubs_basedon_TCIA0618.xm
 
 records = []
 soup = BeautifulSoup(xml,"lxml")
-#TODO: Fix the dash aftera website when there is no abstract
 for record in soup.xml.records:
     authors = ""
     for author in record.contributors.authors:
@@ -42,6 +41,7 @@ for record in soup.xml.records:
         abstract = record.abstract.text
     except AttributeError:
         abstract = ""
+        url = url[:-3]
     if pubtype in ["Journal Article","Conference Proceedings"]:
         records.append(Record(authors,title,periodical,year,pubtype,url,abstract))
 
