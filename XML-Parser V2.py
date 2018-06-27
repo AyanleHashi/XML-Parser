@@ -1,4 +1,7 @@
 from bs4 import BeautifulSoup
+import subprocess
+
+path = "C:\\Users\\hashiam\\Desktop\\Python Scripts\\Pubs_basedon_TCIA0618.xml"
 
 class Record:
     def __init__(self,authors="",title="",periodical="",year="",pubtype="",url="",abstract=""):
@@ -11,12 +14,22 @@ class Record:
         self.abstract = abstract
     
     def __str__(self):
-        return url
+        return """
+  <div>
+  <h4>%s</h4>
+  %s
+  <br>
+  <i><periodical>%s</periodical></i> %s
+  <pub-type> - %s</pub-type>
+  <br>
+  %s%s
+  </div>
+ """ % self.tuple_form()
     
     def tuple_form(self):
         return (self.title,self.authors,self.periodical,self.year,self.pubtype,self.url,self.abstract)
 
-with open("C:\\Users\\hashiam\\Desktop\\Python Scripts\\Pubs_basedon_TCIA0618.xml",encoding="utf8") as f:
+with open(path,encoding="utf8") as f:
     xml = f.read()
 
 records = []
@@ -37,6 +50,15 @@ for record in soup.xml.records:
         url = "<a href=\"" + record.urls.find_all("related-urls")[0].url.text + "\">Website</a> - "
     except IndexError:
         url = ""
+        command = "scholar.py -c 1 --phrase \"{}\"".format(title)
+        process = subprocess.Popen(command,stdout=subprocess.PIPE,shell=True)
+        out = process.communicate()[0].decode("cp1252").replace(r"\r","")
+        url = out[out.find("URL")+4:out.find("Year")][:-12]
+        
+        if "scholar" in url:
+            url = url[26:]
+        url = "<a href=\"" + url + "\">Website</a> - "
+#TODO: Fix the URL thingy
     try:
         abstract = record.abstract.text
     except AttributeError:
@@ -47,20 +69,13 @@ for record in soup.xml.records:
 
 entry = ""
 for r in records:
-    entry += """  
-  <h4>%s</h4>
-  %s
-  <br>
-  <i><periodical>%s</periodical></i> %s
-  <pub-type> - %s</pub-type>
-  <br>
-  %s%s
- """ % r.tuple_form()
+    entry += str(r)
 
 paperpile_html = """<html>
   <style>
     html {{
       font-family: "Helvetica";
+      line-height:150%
     }}
     periodical {{
       color: green;
@@ -70,10 +85,14 @@ paperpile_html = """<html>
     }}
     h4 {{
       margin-bottom: 0px;
-      color: #000066;
+      color: #064361;
     }}
     a {{
       text-decoration: none;
+    }}
+    div {{
+      margin-right: 25em;
+      margin-left: 35em;
     }}
   </style>  
   {}
