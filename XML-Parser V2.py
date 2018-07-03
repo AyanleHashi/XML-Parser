@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import subprocess
 
+
 path = "C:\\Users\\hashiam\\Desktop\\Python Scripts\\Pubs_basedon_TCIA0618.xml"
 
 class Record:
@@ -50,6 +51,8 @@ for record in soup.xml.records:
         url = "<a href=\"" + record.urls.find_all("related-urls")[0].url.text + "\">Website</a> - "
     except IndexError:
         url = ""
+        #number of citations (scholar link too)
+        #number of total citations per year (add to graph?)
         command = "scholar.py -c 1 --phrase \"{}\"".format(title)
         process = subprocess.Popen(command,stdout=subprocess.PIPE,shell=True)
         out = process.communicate()[0].decode("cp1252").replace(r"\r","")
@@ -58,7 +61,7 @@ for record in soup.xml.records:
         if "scholar" in url:
             url = url[26:]
         url = "<a href=\"" + url + "\">Website</a> - "
-#TODO: Fix the URL thingy
+        
     try:
         abstract = record.abstract.text
     except AttributeError:
