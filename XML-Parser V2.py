@@ -1,6 +1,11 @@
 from bs4 import BeautifulSoup
 import subprocess
 
+"""
+The main problem is that Google Scholar does not allow too many requests at a 
+time, and given how large the publication XML file is, it blocks you from 
+getting all of the URLs in one go.
+"""
 
 path = "C:\\Users\\hashiam\\Desktop\\Python Scripts\\Pubs_basedon_TCIA0618.xml"
 
