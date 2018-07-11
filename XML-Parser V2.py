@@ -1,9 +1,10 @@
 from bs4 import BeautifulSoup
+import ftfy
 import subprocess
 
 """
-The main problem is that Google Scholar does not allow too many requests at a 
-time, and given how large the publication XML file is, it blocks you from 
+The main problem is that Google Scholar does not allow too many requests at a
+time, and given how large the publication XML file is, it blocks you from
 getting all of the URLs in one go.
 
 Potential Solutions:
@@ -14,7 +15,7 @@ Potential Solutions:
 path = "/home/ayanlehashi/mysite/scripts/Pubs_basedon_TCIA0618.xml"
 
 class Record:
-    def __init__(self,authors="",title="",periodical="",year="",pubtype="",url="",abstract=""):
+    def __init__(self,authors="",title="",periodical="",year="",pubtype="",url="",abstract="",citations=""):
         self.authors = authors
         self.title = title
         self.periodical = periodical
@@ -22,7 +23,10 @@ class Record:
         self.pubtype = pubtype
         self.url = url
         self.abstract = abstract
-    
+        self.citations = citations
+
+        self.labels = []
+
     def __str__(self):
         return """
     <div id="paper">
@@ -35,7 +39,7 @@ class Record:
         %s%s
     </div>
  """ % self.tuple_form()
-    
+
     def tuple_form(self):
         return (self.title,self.authors,self.periodical,self.year,self.pubtype,self.url,self.abstract)
 
@@ -49,7 +53,7 @@ for record in soup.xml.records:
     authors = ""
     for author in record.contributors.authors:
         authors += author.text + "; "
-    authors = authors[:-2]
+    authors = ftfy.fix_text(authors[:-2])
     title = record.titles.title.text
     try:
         periodical = record.periodical.find_all("full-title")[0].text + ", "
@@ -61,6 +65,7 @@ for record in soup.xml.records:
         url = "<a href=\"" + record.urls.find_all("related-urls")[0].url.text + "\">Website</a>"
     except IndexError:
         url = ""
+        citations = ""
         """
         #number of citations (scholar link too)
         #number of total citations per year (add to graph?)
@@ -68,7 +73,9 @@ for record in soup.xml.records:
         process = subprocess.Popen(command,stdout=subprocess.PIPE,shell=True)
         out = process.communicate()[0].decode("cp1252").replace(r"\r","")
         url = out[out.find("URL")+4:out.find("Year")][:-12]
-        
+        citations = str(int(out[out.index("Citations")+len("Citations")+1:out.index("Versions")]))
+
+
         if "scholar.google.com" in url:
             url = url[26:]
         if len(url) != 0:
@@ -103,7 +110,7 @@ paperpile_html = """<html>
             }}
             h4 {{
                 margin-bottom: 0px;
-                color: #0fa5f0;
+                color: #0FA5F0;
             }}
             a {{
                 text-decoration: none;
