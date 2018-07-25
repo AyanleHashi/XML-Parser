@@ -1,17 +1,8 @@
 from bs4 import BeautifulSoup
+from natsort import natsorted, ns
 import ftfy
 import subprocess
 import csv
-
-"""
-The main problem is that Google Scholar does not allow too many requests at a
-time, and given how large the publication XML file is, it blocks you from
-getting all of the URLs in one go.
-
-Potential Solutions:
-    -Have the script run in multiple parts
-    -Add time.sleep(10) after each element in the for loop (change time if needed)
-"""
 
 path = "/home/ayanlehashi/mysite/scripts/Pubs_basedon_TCIA0618.xml"
 
@@ -37,7 +28,7 @@ class Record:
             <pub-type> - {5}</pub-type> {6}
             <br>
             {7}{8}
-        </div><br>
+        </div>
      """.format(*self.tuple_form())
 
     def tuple_form(self):
@@ -140,13 +131,11 @@ paperpile_html = """<html>
                 padding-top: 20px;
             }}
             #sidebar {{
-                height: 500px;
                 width: 100px;
                 position: fixed;
                 z-index: 1;
-                top: 0;
+                top: 50;
                 left: 5;
-                padding-top: 20px;
             }}
             .draggable {{
                 height: 40px;
@@ -162,8 +151,6 @@ paperpile_html = """<html>
                 background: #ccc;
                 border-radius: 5px;
                 border: 1px solid #666;
-                /*font-size: 12px;*/
-                /*padding: 5px;*/
                 padding: 10px;
             }}
             .searchbar {{
