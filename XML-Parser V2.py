@@ -95,6 +95,7 @@ for r in records:
 
 paperpile_html = """<html>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="https://wiki.cancerimagingarchive.net/s/en_GB/7400/f2dd15fadfb45568d4c57973599993b8f86142a0/28/_/favicon.ico">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -123,19 +124,31 @@ paperpile_html = """<html>
             a {{
                 text-decoration: none;
             }}
+            #sidebar {{
+                width: 100px;
+                position: fixed;
+                z-index: 1;
+                top: 120;
+                left: 5;
+            }}
+            #header {{
+                left: 0;
+                right: 0;
+                position: absolute;
+                height: 100px;
+                background-color: #eee;
+            }}
+            .input-group {{
+                width: 1000px;
+                padding-top: 30;
+                left: 300;
+            }}
             .paper {{
                 /*border: 1px solid #DDDDDD;
                 border-radius: 5px;*/
             }}
             .container {{
-                padding-top: 20px;
-            }}
-            #sidebar {{
-                width: 100px;
-                position: fixed;
-                z-index: 1;
-                top: 50;
-                left: 5;
+                padding-top: 50px;
             }}
             .draggable {{
                 height: 40px;
@@ -153,9 +166,6 @@ paperpile_html = """<html>
                 border: 1px solid #666;
                 padding: 10px;
             }}
-            .searchbar {{
-
-            }}
             .btn-link {{
                 padding: 0px;
             }}
@@ -163,14 +173,21 @@ paperpile_html = """<html>
             .{{{{ label }}}} {{}}
             {{% endfor %}}
         </style>
-
     </head>
+
+    <div id="header">
+        <div class="input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+            <input id="searchbar" type="text" class="form-control searchbar" name="Searchbar">
+        </div>
+    <div>
+
     <div id="sidebar">
         <form action="" method="POST">
-            Add a label: <input type="text" name="label">
+            <input type="text" class="form-control searchbar" name="label" placeholder="Add label...">
             <input type="submit" value="Add">
         </form>
-
+        Drag and drop labels:
         {{% for label in labels %}}
         <div class="draggable">{{{{ label }}}}</div>
         {{% endfor %}}
@@ -178,10 +195,7 @@ paperpile_html = """<html>
     </div>
 
     <div class="container">
-        <div class="input-group">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-            <input id="searchbar" type="text" class="form-control searchbar" name="Searchbar" placeholder="Search...">
-        </div>
+
         {}
     </div>
 </html>
