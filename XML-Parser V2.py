@@ -7,7 +7,7 @@ import csv
 path = "/home/ayanlehashi/mysite/scripts/Pubs_basedon_TCIA0618.xml"
 
 class Record:
-    def __init__(self,i="",authors="",title="",periodical="",year="",pubtype="",url="",abstract="",citations=""):
+    def __init__(self,i="",authors="",title="",periodical="",year="",pubtype="",url="",abstract="",citations="",keywords=""):
         self.i = i
         self.authors = authors
         self.title = title
@@ -17,22 +17,26 @@ class Record:
         self.url = url
         self.abstract = abstract
         self.citations = citations
+        self.keywords = keywords
+        if type(self.keywords) == type(list()):
+            self.keywords = ", ".join(self.keywords)
 
     def __str__(self):
      return """
         <div id="{0}" class="paper droppable">
             <h4>{1}</h4>
-            {2}
+            <author>{2}</author>
             <br>
             <periodical>{3}</periodical> {4}
             <pub-type> - {5}</pub-type> {6}
             <br>
             {7}{8}
+            {9}
         </div>
      """.format(*self.tuple_form())
 
     def tuple_form(self):
-        return (self.i,self.title,self.authors,self.periodical,self.year,self.pubtype,self.citations,self.url,self.abstract)
+        return (self.i,self.title,self.authors,self.periodical,self.year,self.pubtype,self.citations,self.url,self.abstract,self.keywords)
 
 with open(path,encoding="utf8") as f:
     xml = f.read()
@@ -66,7 +70,7 @@ for record in soup.xml.records:
     try:
         #citations = str(int(out[out.index("Citations")+len("Citations")+1:out.index("Versions")]))
         citations = ""
-        citations = " cited by " + citations
+        citations = " cited " + citations + " times"
     except ValueError:
         citations = ""
     try:
@@ -86,7 +90,19 @@ for record in soup.xml.records:
     except AttributeError:
         abstract = ""
     #if pubtype in ["Journal Article","Conference Proceedings"]:
-    records.append(Record(str(record_number),authors,title,periodical,year,pubtype,url,abstract,citations))
+
+    keyword_list = []
+    try:
+        for kw in record.keywords:
+            s = ftfy.fix_text(kw.text.lower())
+            if "," in s:
+                keyword_list.extend([x.strip() for x in s.split(", ")])
+            else:
+                keyword_list.append(s)
+    except:
+        pass
+
+    records.append(Record(str(record_number),authors,title,periodical,year,pubtype,url,abstract,citations,keyword_list))
     record_number += 1
 
 entry = ""
@@ -139,9 +155,9 @@ paperpile_html = """<html>
                 background-color: #eee;
             }}
             .input-group {{
-                width: 1000px;
+                width: 70%;
                 padding-top: 30;
-                left: 300;
+                left: 17vw;
             }}
             .paper {{
                 /*border: 1px solid #DDDDDD;
@@ -153,7 +169,7 @@ paperpile_html = """<html>
             .draggable {{
                 height: 40px;
                 display: inline-block;
-                background: #ccc;
+                background: #ddd;
                 padding: 10px;
                 border-radius: 5px;
                 border: 1px solid #666;
@@ -186,6 +202,9 @@ paperpile_html = """<html>
         <form action="" method="POST">
             <input type="text" class="form-control searchbar" name="label" placeholder="Add label...">
             <input type="submit" value="Add">
+
+            <!--<button id="titleSort">Title</button>
+            <button id="authorSort">Author</button>-->
         </form>
         Drag and drop labels:
         {{% for label in labels %}}
