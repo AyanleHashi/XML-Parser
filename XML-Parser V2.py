@@ -1,7 +1,5 @@
 from bs4 import BeautifulSoup
-from natsort import natsorted, ns
 import ftfy
-import subprocess
 import csv
 
 path = "/home/ayanlehashi/mysite/scripts/Pubs_basedon_TCIA0618.xml"
@@ -28,7 +26,7 @@ class Record:
             <author>{2}</author>
             <br>
             <periodical>{3}</periodical> {4}
-            <pub-type> - {5}</pub-type> {6}
+            <pub-type> - {5}</pub-type>{6}
             <br>
             {7}{8}
             {9}
@@ -37,6 +35,12 @@ class Record:
 
     def tuple_form(self):
         return (self.i,self.title,self.authors,self.periodical,self.year,self.pubtype,self.citations,self.url,self.abstract,self.keywords)
+
+with open("/home/ayanlehashi/mysite/static/titleinfo_fixed_forreal_utf8.csv","r") as f:
+    reader = csv.reader(f)
+    title_info = []
+    for row in reader:
+        title_info.append((row[0],row[1],row[2]))
 
 with open(path,encoding="utf8") as f:
     xml = f.read()
@@ -59,37 +63,26 @@ for record in soup.xml.records:
         periodical = ""
     year = record.dates.year.text
     pubtype = record.find_all("ref-type")[0]["name"]
-    """
-    #number of citations (scholar link too)
-    #number of total citations per year (add to graph?)
-    command = "scholar.py -c 1 --phrase \"{}\"".format(title)
-    process = subprocess.Popen(command,stdout=subprocess.PIPE,shell=True)
-    out = process.communicate()[0].decode("cp1252").replace(r"\r","")
-    time.sleep(10)
-    """
-    try:
-        #citations = str(int(out[out.index("Citations")+len("Citations")+1:out.index("Versions")]))
-        citations = ""
-        citations = " cited " + citations + " times"
-    except ValueError:
-        citations = ""
+
+    citations = ""
+    info_url = ""
+    for i in title_info:
+        if title.replace("‐","-") == i[0].replace("‐","-"):
+            citations = ", cited " + str(i[1]) + " times"
+            info_url = "<a href=\"" + str(i[2]) + "\"><span class=\"glyphicon glyphicon-link\"></span>Website</a>"
+    if len(citations) == 0:
+        citations = ", cited 0 times"
+
     try:
         url = "<a href=\"" + record.urls.find_all("related-urls")[0].url.text + "\"><span class=\"glyphicon glyphicon-link\"></span>Website</a>"
     except IndexError:
-        url = ""
-        #url = out[out.find("URL")+4:out.find("Year")][:-12]
-
-        if "scholar.google.com" in url:
-            url = url[26:]
-        if len(url) != 0:
-            url = "<a href=\"" + url + "\">Website</a>"
+        url = info_url
     try:
         abstract = """<button type="button" class="btn btn-link" data-toggle="collapse" data-target="#demo{0}"><span class="glyphicon glyphicon-arrow-down"></span>Abstract</button>
         <div id="demo{0}" class="collapse">{1}</div>""".format(abstract_number,record.abstract.text)
         abstract_number += 1
     except AttributeError:
         abstract = ""
-    #if pubtype in ["Journal Article","Conference Proceedings"]:
 
     keyword_list = []
     try:
@@ -112,9 +105,9 @@ for r in records:
 paperpile_html = """<html>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="https://wiki.cancerimagingarchive.net/s/en_GB/7400/f2dd15fadfb45568d4c57973599993b8f86142a0/28/_/favicon.ico">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <script src="/static/draggable.js"></script>
@@ -159,10 +152,6 @@ paperpile_html = """<html>
                 padding-top: 30;
                 left: 17vw;
             }}
-            .paper {{
-                /*border: 1px solid #DDDDDD;
-                border-radius: 5px;*/
-            }}
             .container {{
                 padding-top: 50px;
             }}
@@ -177,7 +166,7 @@ paperpile_html = """<html>
             .draggable-after {{
                 height: 40px;
                 display: inline-block;
-                background: #ccc;
+                background: #ddd;
                 border-radius: 5px;
                 border: 1px solid #666;
                 padding: 10px;
@@ -185,9 +174,6 @@ paperpile_html = """<html>
             .btn-link {{
                 padding: 0px;
             }}
-            {{% for label in labels %}}
-            .{{{{ label }}}} {{}}
-            {{% endfor %}}
         </style>
     </head>
 
@@ -200,17 +186,12 @@ paperpile_html = """<html>
 
     <div id="sidebar">
         <form action="" method="POST">
-            <input type="text" class="form-control searchbar" name="label" placeholder="Add label...">
-            <input type="submit" value="Add">
+            <input id="labelInput" type="text" class="form-control searchbar" name="label" placeholder="Add label...">
+            <button id="labelSubmit">Add</button>
 
-            <!--<button id="titleSort">Title</button>
-            <button id="authorSort">Author</button>-->
+            <!--<button id="titleSort" type="button">Title</button>
+            <button id="authorSort" type="button">Author</button>-->
         </form>
-        Drag and drop labels:
-        {{% for label in labels %}}
-        <div class="draggable">{{{{ label }}}}</div>
-        {{% endfor %}}
-
     </div>
 
     <div class="container">
@@ -222,8 +203,3 @@ paperpile_html = """<html>
 
 with open("/home/ayanlehashi/mysite/templates/paperpile.html","w",encoding="utf8") as paperpile_html_file:
     paperpile_html_file.write(paperpile_html)
-
-with open("/home/ayanlehashi/mysite/static/classinfo.csv","w",encoding="utf8") as csvfile:
-    writer = csv.writer(csvfile)
-    for record in records:
-        writer.writerow(record.tuple_form())
