@@ -8,5 +8,3 @@ Requirements:
   * `pip install lxml`
   
   * `pip install ftfy`
-  
-  * `pip install natsort`
