@@ -82,8 +82,6 @@ for record in soup.xml.records:
     except IndexError:
         url = info_url
     try:
-        #abstract = """<button type="button" class="btn btn-link" data-toggle="collapse" data-target="#abstract{0}"><span class="glyphicon glyphicon-arrow-down"></span>Abstract</button>
-        #<div id="abstract{0}" class="collapse">{1}</div>""".format(abstract_number,record.abstract.text)
         abstract = """<button type="button" class="btn btn-link" data-toggle="collapse" data-target="#abstract{0}"><span class="glyphicon glyphicon-arrow-down"></span>Abstract</button>""".format(abstract_number)
         abstract_div = """<div id="abstract{0}" class="collapse">{1}</div>""".format(abstract_number,record.abstract.text)
         abstract_number += 1
@@ -112,7 +110,6 @@ for record in soup.xml.records:
     record_number += 1
 
 entry = ""
-#for r in records[page_count:]:
 for r in records:
     entry += str(r)
 
@@ -235,7 +232,6 @@ paperpile_html = """<!DOCTYPE html>
     </body>
 </html>
 """.format(entry)
-#.format("".join([str(x) for x in records[:page_count]]))
 
 with open("/home/ayanlehashi/mysite/templates/paperpile.html","w",encoding="utf8") as paperpile_html_file:
     paperpile_html_file.write(paperpile_html)
