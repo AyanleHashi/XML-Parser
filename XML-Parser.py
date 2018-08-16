@@ -3,6 +3,12 @@ from collections import Counter
 from re import sub
 import ftfy
 import csv
+import os
+
+"""
+cwd = os.getcwd()
+path = cwd + "\\Pubs_basedon_TCIA0618.xml"
+"""
 
 path = "/home/ayanlehashi/mysite/scripts/Pubs_basedon_TCIA0618.xml"
 
@@ -39,7 +45,7 @@ class Record:
     def tuple_form(self):
         return (self.i,self.title,self.authors,self.periodical,self.year,self.pubtype,self.citations,self.url,self.abstract,self.keywords,self.abstract_div)
 
-with open("/home/ayanlehashi/mysite/static/titleinfo_fixed_forreal_utf8.csv","r") as f:
+with open("/home/ayanlehashi/mysite/static/titleinfo.csv","r") as f:
     reader = csv.reader(f)
     title_info = []
     for row in reader:
@@ -122,8 +128,8 @@ ALL_KEYWORDS = sorted([sub("[\"\\t]","",x.lower()) for x in ALL_KEYWORDS])
 counter = Counter(ALL_KEYWORDS)
 keywords_to_add = ""
 for c in counter.keys():
-    if counter[c] > 4:
-        keywords_to_add += "<button type=\"button\" class=\"btn btn-link sidebar-tag\">" + c + "</button><br>"
+    if counter[c] > 2:
+        keywords_to_add += "<button type=\"button\" class=\"btn btn-link sidebar-tag\">" + c + "</button> (" + str(counter[c]) + ")<br>"
 
 paperpile_html = """<!DOCTYPE html>
     <html>
@@ -134,14 +140,12 @@ paperpile_html = """<!DOCTYPE html>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-    <!--<script src="/static/script.js"></script>-->
 
     <head>
         <title>TCIA Publications</title>
         <style>
             html {{
                 font-family: "Arial";
-                /*line-height:150%;*/
             }}
             periodical {{
                 color: green;
@@ -160,7 +164,7 @@ paperpile_html = """<!DOCTYPE html>
             #wrapper {{
                 position: fixed;
                 top: 0;
-                width: 12vw;
+                width: 16vw;
                 height: 100%;
                 background-color: #eee;
                 z-index: 5;
@@ -169,14 +173,16 @@ paperpile_html = """<!DOCTYPE html>
                 position: relative;
                 top: 100px;
                 left: 1vw;
-                width: 12vw;
+                width: 15vw;
+                height: 91vh;
+                overflow-y: scroll;
             }}
             #header {{
                 position: fixed;
                 height: 100px;
                 width: 100%;
                 z-index: 4;
-                background-color: #eee;/*#205081*/
+                background-color: #eee;
                 border-bottom: 2px solid #ccc;
                 float: left;
             }}
@@ -189,11 +195,11 @@ paperpile_html = """<!DOCTYPE html>
             .input-group {{
                 width: 45vw;
                 padding-top: 30px;
-                left: 13vw;
+                left: 17vw;
             }}
             .container {{
                 padding-top: 110px;
-                margin-left: 12vw;
+                margin-left: 16vw;
                 width: 50vw;
                 border: 2px solid #ccc;
             }}
@@ -226,7 +232,7 @@ paperpile_html = """<!DOCTYPE html>
                 font-weight: Bold;
             }}
             .pagination {{
-                margin-left: 13vw;
+                margin-left: 17vw;
             }}
             .padding-0 {{
                 padding-left: 0px;
@@ -255,6 +261,7 @@ paperpile_html = """<!DOCTYPE html>
         $(document).ready(function() {{
             var COOKIES = {{}};
             var elements_per_page = 25;
+            $('[data-toggle="tooltip"]').tooltip();
 
             //Add the first page to the site
             $(".pagination").html("");
@@ -265,7 +272,7 @@ paperpile_html = """<!DOCTYPE html>
             paginate(elements_per_page);
 
             //Set the cookies if they don't already exist
-            /*if (Cookies.get("COOKIES") == undefined) {{
+/*            if (Cookies.get("COOKIES") == undefined) {{
                 COOKIES["Labels"] = [];
                 Cookies.set("COOKIES",COOKIES,{{expires:365}});
             }}
@@ -334,37 +341,39 @@ paperpile_html = """<!DOCTYPE html>
                     alert("Label length must be 2 or more");
                 }}
                 Cookies.set("COOKIES",COOKIES,{{expires:365}});
-            }});*/
-
+            }});
+*/
             //Temporarily hide any papers that don't contain the text entered in the search bar
             $("#searchbar").on("keyup", function() {{
                 $(".container").find("li").removeClass("active");
                 $(".sidebar-tag").removeClass("selected");
+                $(".pagination").hide();
                 var value = $(this).val().toLowerCase();
 
                 if (value.indexOf("author:") > -1) {{
                     $(".container .paper").filter(function() {{
-                        $(this).toggle($(this).find("author").text().toLowerCase().indexOf(value.substring(7,value.length)) > -1);
+                        $(this).toggle($(this).find("author").text().toLowerCase().indexOf(value.substring(7,value.length).replace(/^\\s/,"")) > -1);
                     }});
                 }}
                 else if (value.indexOf("year:") > -1) {{
                     $(".container .paper").filter(function() {{
-                        $(this).toggle($(this).find("year").text().toLowerCase().indexOf(value.substring(5,value.length)) > -1);
+                        $(this).toggle($(this).find("year").text().toLowerCase().indexOf(value.substring(5,value.length).replace(/^\\s/,"")) > -1);
                     }});
                 }}
                 else if (value.indexOf("title:") > -1) {{
                     $(".container .paper").filter(function() {{
-                        $(this).toggle($(this).find("year").text().toLowerCase().indexOf(value.substring(6,value.length)) > -1);
+                        $(this).toggle($(this).find("h4").text().toLowerCase().indexOf(value.substring(6,value.length).replace(/^\\s/,"")) > -1);
                     }});
                 }}
                 else if (value == "") {{
                     paginate(elements_per_page);
                     $("#searchbar").focus();
+                    $(".pagination").show();
                 }}
                 else {{
                     $(".container .paper").filter(function() {{
-                        //$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-                        $(this).toggle($(this).find("h4").text().toLowerCase().indexOf(value) > -1);
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                        //$(this).toggle($(this).find("h4").text().toLowerCase().indexOf(value) > -1);
                     }});
                 }}
             }});
@@ -418,7 +427,12 @@ paperpile_html = """<!DOCTYPE html>
                     tag = "h4"
                 }}
                 var OrderedDivs = $(".paper").sort(function (a, b) {{
-                    return ($(a).find(tag).text().toLowerCase().replace("“","") > $(b).find(tag).text().toLowerCase()) ? 1 : -1;
+                    if (tag == "year") {{
+                        return ($(a).find(tag).text().toLowerCase().replace("“","") < $(b).find(tag).text().toLowerCase()) ? 1 : -1;
+                    }}
+                    else {{
+                        return ($(a).find(tag).text().toLowerCase().replace("“","") > $(b).find(tag).text().toLowerCase()) ? 1 : -1;
+                    }}
                 }});
 
                 $(".container").html(OrderedDivs);
@@ -433,7 +447,7 @@ paperpile_html = """<!DOCTYPE html>
         <div id="header">
             <div class="row">
                 <div class="input-group">
-                    <div class="col-xs-9 padding-0">
+                    <div class="col-xs-8 padding-0">
                         <input id="searchbar" type="text" class="form-control searchbar" name="Searchbar" autofocus>
                     </div>
 
@@ -444,6 +458,10 @@ paperpile_html = """<!DOCTYPE html>
                 			<option>Publication Date</option>
                 			<option>Title</option>
                 		</select>
+                	</div>
+
+                	<div class="col-xs-1 padding-0">
+                	    <span class="glyphicon glyphicon-question-sign" style="font-size:32px;padding-left:8px;" data-toggle="tooltip" data-placement="right" data-original-title="" title="Search using &quot;author:&quot; or &quot;title:&quot;"></span>
                 	</div>
             	</div>
             </div>
@@ -471,6 +489,11 @@ paperpile_html = """<!DOCTYPE html>
     </body>
 </html>
 """.format(keywords_to_add,entry)
+
+"""
+with open(cwd + "paperpile.html","w",encoding="utf8") as f:
+    f.write(paperpile_html)
+"""
 
 with open("/home/ayanlehashi/mysite/templates/paperpile.html","w",encoding="utf8") as paperpile_html_file:
     paperpile_html_file.write(paperpile_html)
