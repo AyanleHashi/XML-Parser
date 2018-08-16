@@ -111,7 +111,7 @@ for record in soup.xml.records:
                 ALL_KEYWORDS.append(s)
         keyword_list = " · ".join(keyword_list)
         keyword_list = """<button type="button" class="btn btn-link" data-toggle="collapse" data-target="#tag{0}"><span class="glyphicon glyphicon-tag"></span>Tags</button>
-            <div id="tag{0}" class="collapse tag">{1}</div>""".format(keyword_number,keyword_list)
+            <div id="tag{0}" class="collapse tag"> {1} </div>""".format(keyword_number,keyword_list)
 
         keyword_number += 1
     except:
@@ -128,11 +128,11 @@ ALL_KEYWORDS = sorted([sub("[\"\\t]","",x.lower()) for x in ALL_KEYWORDS])
 counter = Counter(ALL_KEYWORDS)
 keywords_to_add = ""
 for c in counter.keys():
-    if counter[c] > 2:
-        keywords_to_add += "<button type=\"button\" class=\"btn btn-link sidebar-tag\">" + c + "</button> (" + str(counter[c]) + ")<br>"
+    if counter[c] > 1:
+        keywords_to_add += "<button type=\"button\" class=\"btn btn-link sidebar-tag\">" + c + "</button> (" + str(counter[c]) + ")<br>\n"
 
 paperpile_html = """<!DOCTYPE html>
-    <html>
+<html>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="https://wiki.cancerimagingarchive.net/s/en_GB/7400/f2dd15fadfb45568d4c57973599993b8f86142a0/28/_/favicon.ico">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -402,7 +402,7 @@ paperpile_html = """<!DOCTYPE html>
                 $(".sidebar-tag").removeClass("selected");
                 $(this).addClass("selected");
                 $(".paper").filter(function() {{
-                    $(this).toggle($(this).find(".tag").text().indexOf(value) > -1);
+                    $(this).toggle($(this).find(".tag").text().indexOf(" " + value + " ") > -1);
                 }});
             }});
 
@@ -461,7 +461,7 @@ paperpile_html = """<!DOCTYPE html>
                 	</div>
 
                 	<div class="col-xs-1 padding-0">
-                	    <span class="glyphicon glyphicon-question-sign" style="font-size:32px;padding-left:8px;" data-toggle="tooltip" data-placement="right" data-original-title="" title="Search using &quot;author:&quot; or &quot;title:&quot;"></span>
+                	    <span class="glyphicon glyphicon-question-sign" style="font-size:32px;padding-left:8px;" data-toggle="tooltip" data-placement="right" data-original-title="" title="Search using &quot;author:&quot;, &quot;title:&quot;, or &quot;year:&quot;"></span>
                 	</div>
             	</div>
             </div>
