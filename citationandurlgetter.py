@@ -37,11 +37,17 @@ with open("titleinfo.csv","a",newline="",encoding="utf8") as f:
             
             querier.send_query(query)
             
-            url = querier.articles[0]["url"]
+            try:
+                url = querier.articles[0]["url"]
+            except IndexError:
+                url = ""
             if url != None:
                 if "scholar.google.com" in url:
                     url = url[26:]
-            citations = querier.articles[0]["num_citations"]
+            try:
+                citations = querier.articles[0]["num_citations"]
+            except IndexError:
+                citations = ""
             
             if citations == None:
                 citations = 0
