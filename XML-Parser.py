@@ -5,12 +5,8 @@ import ftfy
 import csv
 import os
 
-"""
-cwd = os.getcwd()
-path = cwd + "\\Pubs_basedon_TCIA0618.xml"
-"""
-
-path = "/home/ayanlehashi/mysite/scripts/Pubs_basedon_TCIA0618.xml"
+cwd = os.getcwd() + "\\"
+path = cwd + "Pubs_basedon_TCIA0618.xml"
 
 class Record:
     def __init__(self,i="",authors="",title="",periodical="",year="",pubtype="",citations="",url="",abstract="",keywords="",abstract_div=""):
@@ -45,7 +41,7 @@ class Record:
     def tuple_form(self):
         return (self.i,self.title,self.authors,self.periodical,self.year,self.pubtype,self.citations,self.url,self.abstract,self.keywords,self.abstract_div)
 
-with open("/home/ayanlehashi/mysite/static/titleinfo.csv","r") as f:
+with open(cwd + "titleinfo.csv","r") as f:
     reader = csv.reader(f)
     title_info = []
     for row in reader:
@@ -82,7 +78,10 @@ for record in soup.xml.records:
             citations = ", cited " + i[1] + " times"
             if i[1] == "1":
                 citations = citations[:-1]
-            info_url = "<a href=\"" + str(i[2]) + "\"><span class=\"glyphicon glyphicon-link\"></span>Website</a>"
+            if len(i[2]) == 0:
+                info_url = ""
+            else:
+                info_url = "<a href=\"" + str(i[2]) + "\"><span class=\"glyphicon glyphicon-link\"></span>Website</a>"
     if len(citations) == 0:
         citations = ", cited 0 times"
 
@@ -271,78 +270,6 @@ paperpile_html = """<!DOCTYPE html>
 
             paginate(elements_per_page);
 
-            //Set the cookies if they don't already exist
-/*            if (Cookies.get("COOKIES") == undefined) {{
-                COOKIES["Labels"] = [];
-                Cookies.set("COOKIES",COOKIES,{{expires:365}});
-            }}
-            else {{
-                //Otherwise, load the labels from stored cookies
-                COOKIES = Cookies.getJSON("COOKIES");
-            }}
-
-            //Set the labels that were stored in the cookies
-            Object.keys(COOKIES).forEach(function(element) {{
-                COOKIES[element].forEach(function(label) {{
-                    $("#"+element).append("<div class=\\"draggable-after\\">" + label + "</div>");
-                }});
-            }});
-
-            Object.keys(COOKIES["Labels"]).forEach(function(element){{
-                $("#sidebar").append("<div class=\\"draggable\\" title=\\"Click to drag\\">" + COOKIES["Labels"][element] + "</div><br>");
-            }});
-
-            Cookies.set("COOKIES",COOKIES,{{expires:365}});
-
-            $(".draggable").draggable({{
-                revert: true,
-                revertDuration: 0
-            }});
-
-            $(".droppable").droppable({{
-                activeClass: "active",
-                drop: function (event, ui) {{
-                    //If the label isn't already on the publication, add it
-                    var id = $(this).attr("id");
-
-                    if (!COOKIES.hasOwnProperty(id)) {{
-                        COOKIES[id] = [];
-                    }}
-
-                    if (!COOKIES[id].includes(ui.draggable.text())) {{
-                        $(this).append("<div class=\\"draggable-after\\" title=\\"Click to remove\\">" + ui.draggable.text() + "</div>");
-
-                        //Set the cookie so it remembers the labels on different sessions
-                            if (!COOKIES[id].includes(ui.draggable.text())) {{
-                                COOKIES[id].push(ui.draggable.text());
-                            }}
-
-                        Cookies.set("COOKIES",COOKIES,{{expires:365}});
-                    }}
-                }}
-            }});
-
-            //Remove the label and cookie on click
-          	$(".paper").on("click",".draggable-after",function() {{
-        		COOKIES[$(this).parent().attr("id")].splice(COOKIES[$(this).parent().attr("id")].indexOf($(this).text()),1);
-        	    $(this).remove();
-
-        	    Cookies.set("COOKIES",COOKIES,{{expires:365}});
-        	}});
-
-            //Add a new user-submitted label to the cookie
-            $("#labelSubmit").on("click",function() {{
-                if ($("#labelInput").val().length > 1) {{
-                    if (!COOKIES["Labels"].includes($("#labelInput").val())) {{
-                        COOKIES["Labels"].push($("#labelInput").val());
-                    }}
-                }}
-                else {{
-                    alert("Label length must be 2 or more");
-                }}
-                Cookies.set("COOKIES",COOKIES,{{expires:365}});
-            }});
-*/
             //Temporarily hide any papers that don't contain the text entered in the search bar
             $("#searchbar").on("keyup", function() {{
                 $(".container").find("li").removeClass("active");
@@ -490,10 +417,6 @@ paperpile_html = """<!DOCTYPE html>
 </html>
 """.format(keywords_to_add,entry)
 
-"""
-with open(cwd + "paperpile.html","w",encoding="utf8") as f:
-    f.write(paperpile_html)
-"""
 
-with open("/home/ayanlehashi/mysite/templates/paperpile.html","w",encoding="utf8") as paperpile_html_file:
-    paperpile_html_file.write(paperpile_html)
+with open(cwd + "Publications.html","w",encoding="utf8") as f:
+    f.write(paperpile_html)
