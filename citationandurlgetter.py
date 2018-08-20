@@ -54,6 +54,10 @@ with open("titleinfo.csv","a",newline="",encoding="utf8") as f:
             if url == None:
                 url = ""
             
+            print(record_title)
+            print(citations)
+            print(url)
+            
             writer.writerow([fix_text(record_title),fix_text(str(citations)),fix_text(url)])
             
             sleep(10)
