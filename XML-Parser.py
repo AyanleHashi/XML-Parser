@@ -109,7 +109,7 @@ for record in soup.xml.records:
                 keyword_list.append(s)
                 ALL_KEYWORDS.append(s)
         keyword_list = "· " + " · ".join(keyword_list) + " ·"
-        keyword_list = """<button type="button" class="btn btn-link" data-toggle="collapse" data-target="#tag{0}"><span class="glyphicon glyphicon-tag"></span>Tags</button>
+        keyword_list = """<button type="button" class="btn btn-link" data-toggle="collapse" data-target="#tag{0}"><span class="glyphicon glyphicon-tag"></span>Keywords</button>
             <div id="tag{0}" class="collapse tag"> {1} </div>""".format(keyword_number,keyword_list)
 
         keyword_number += 1
