@@ -4,10 +4,14 @@ A script that extracts publication data from the Cancer Imaging Archive publicat
 Requirements:
 
   * `pip install bs4`
-
-  * `pip install lxml`
   
   * `pip install ftfy`
+  
+  * `pip install lxml`
+  
+  * `pip install matplotlib`
+  
+  * `pip install scipy`
 
 Instructions
 ----
