@@ -18,14 +18,18 @@ record_titles = []
 for record in soup.xml.records:
     record_titles.append(fix_text(record.titles.title.text))
 
-with open("titleinfo.csv","r",encoding="utf8") as f:
-    reader = csv.reader(f)
-    file_titles = []
-    for row in reader:
-        try:
-            file_titles.append(fix_text(row[0]))
-        except IndexError:
-            pass
+file_titles = []
+try:
+    with open("titleinfo.csv","r",encoding="utf8") as f:
+        reader = csv.reader(f)
+        for row in reader:
+            try:
+                file_titles.append(fix_text(row[0]))
+            except IndexError:
+                pass
+except FileNotFoundError:
+    with open("titleinfo.csv","w",encoding="utf8") as f:
+        pass
 
 with open("titleinfo.csv","a",newline="",encoding="utf8") as f:
     writer = csv.writer(f)
