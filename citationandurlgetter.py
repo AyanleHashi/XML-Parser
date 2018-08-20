@@ -18,7 +18,7 @@ record_titles = []
 for record in soup.xml.records:
     record_titles.append(fix_text(record.titles.title.text))
 
-with open("titleinfo.csv","w+",encoding="utf8") as f:
+with open("titleinfo.csv","r",encoding="utf8") as f:
     reader = csv.reader(f)
     file_titles = []
     for row in reader:
