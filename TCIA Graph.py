@@ -46,4 +46,6 @@ red = mpatches.Patch(color="#FF8888",label="Publications")
 blue = mpatches.Rectangle((0,0),1,8,color="#1F77B4",label="Cumulative")
 plt.legend(handles=[red,blue])
 
+ax2.set_ylim(ymin=0)
+
 plt.savefig("TCIAGraph.svg",bbox_inches="tight")
