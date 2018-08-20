@@ -1,8 +1,5 @@
 #! /usr/bin/env python
 
-#THIS SCRIPT DOES NOT BELONG TO ME, ALL CREDIT IS GIVEN TO CHRISTIAN KREIBICH
-#https://github.com/ckreibich/scholar.py
-
 """
 This module provides classes for querying Google Scholar and parsing
 returned results. It currently *only* processes the first results
