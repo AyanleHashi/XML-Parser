@@ -41,7 +41,7 @@ class Record:
     def tuple_form(self):
         return (self.i,self.title,self.authors,self.periodical,self.year,self.pubtype,self.citations,self.url,self.abstract,self.keywords,self.abstract_div)
 
-with open(cwd + "titleinfo.csv","r") as f:
+with open(cwd + "titleinfo.csv","r",encoding="utf8") as f:
     reader = csv.reader(f)
     title_info = []
     for row in reader:
