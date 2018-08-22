@@ -251,7 +251,7 @@ paperpile_html = """<!DOCTYPE html>
                 font-weight: Bold;
             }}
             .pagination {{
-                margin-left: 17vw;
+                margin-left: 30vw;
             }}
             .padding-0 {{
                 padding-left: 0px;
