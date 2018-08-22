@@ -140,6 +140,15 @@ paperpile_html = """<!DOCTYPE html>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 
+    <!--
+
+    Created by Ayanle Hashi (2018)
+    George Mason University
+    Email: ahashi2000@gmail.com
+    Repository: https://github.com/AyanleHashi/XML-Parser
+
+    -->
+
     <head>
         <title>TCIA Publications</title>
         <style>
@@ -160,6 +169,10 @@ paperpile_html = """<!DOCTYPE html>
             }}
             a {{
                 text-decoration: none;
+            }}
+            img {{
+                max-width: 100%;
+                max-height: 100%;
             }}
             #wrapper {{
                 position: fixed;
@@ -189,6 +202,11 @@ paperpile_html = """<!DOCTYPE html>
             }}
             #labelInput {{
                 width: 70%;
+            }}
+            #imagediv {{
+                position: fixed;
+                width: 24vw;
+                top: 100px;
             }}
             .paper {{
                 padding-bottom: 20px;
@@ -272,6 +290,78 @@ paperpile_html = """<!DOCTYPE html>
 
             paginate(elements_per_page);
 
+            //Set the cookies if they don't already exist
+/*            if (Cookies.get("COOKIES") == undefined) {{
+                COOKIES["Labels"] = [];
+                Cookies.set("COOKIES",COOKIES,{{expires:365}});
+            }}
+            else {{
+                //Otherwise, load the labels from stored cookies
+                COOKIES = Cookies.getJSON("COOKIES");
+            }}
+
+            //Set the labels that were stored in the cookies
+            Object.keys(COOKIES).forEach(function(element) {{
+                COOKIES[element].forEach(function(label) {{
+                    $("#"+element).append("<div class=\\"draggable-after\\">" + label + "</div>");
+                }});
+            }});
+
+            Object.keys(COOKIES["Labels"]).forEach(function(element){{
+                $("#sidebar").append("<div class=\\"draggable\\" title=\\"Click to drag\\">" + COOKIES["Labels"][element] + "</div><br>");
+            }});
+
+            Cookies.set("COOKIES",COOKIES,{{expires:365}});
+
+            $(".draggable").draggable({{
+                revert: true,
+                revertDuration: 0
+            }});
+
+            $(".droppable").droppable({{
+                activeClass: "active",
+                drop: function (event, ui) {{
+                    //If the label isn't already on the publication, add it
+                    var id = $(this).attr("id");
+
+                    if (!COOKIES.hasOwnProperty(id)) {{
+                        COOKIES[id] = [];
+                    }}
+
+                    if (!COOKIES[id].includes(ui.draggable.text())) {{
+                        $(this).append("<div class=\\"draggable-after\\" title=\\"Click to remove\\">" + ui.draggable.text() + "</div>");
+
+                        //Set the cookie so it remembers the labels on different sessions
+                            if (!COOKIES[id].includes(ui.draggable.text())) {{
+                                COOKIES[id].push(ui.draggable.text());
+                            }}
+
+                        Cookies.set("COOKIES",COOKIES,{{expires:365}});
+                    }}
+                }}
+            }});
+
+            //Remove the label and cookie on click
+          	$(".paper").on("click",".draggable-after",function() {{
+        		COOKIES[$(this).parent().attr("id")].splice(COOKIES[$(this).parent().attr("id")].indexOf($(this).text()),1);
+        	    $(this).remove();
+
+        	    Cookies.set("COOKIES",COOKIES,{{expires:365}});
+        	}});
+
+            //Add a new user-submitted label to the cookie
+            $("#labelSubmit").on("click",function() {{
+                if ($("#labelInput").val().length > 1) {{
+                    if (!COOKIES["Labels"].includes($("#labelInput").val())) {{
+                        COOKIES["Labels"].push($("#labelInput").val());
+                    }}
+                }}
+                else {{
+                    alert("Label length must be 2 or more");
+                }}
+                Cookies.set("COOKIES",COOKIES,{{expires:365}});
+            }});
+*/
             //Temporarily hide any papers that don't contain the text entered in the search bar
             $("#searchbar").on("keyup", function() {{
                 $(".container").find("li").removeClass("active");
@@ -376,7 +466,7 @@ paperpile_html = """<!DOCTYPE html>
         <div id="header">
             <div class="row">
                 <div class="input-group">
-                    <div class="col-xs-8 padding-0">
+                    <div class="col-xs-6 padding-0">
                         <input id="searchbar" type="text" class="form-control searchbar" name="Searchbar" autofocus>
                     </div>
 
@@ -390,7 +480,13 @@ paperpile_html = """<!DOCTYPE html>
                 	</div>
 
                 	<div class="col-xs-1 padding-0">
-                	    <span class="glyphicon glyphicon-question-sign" style="font-size:32px;padding-left:8px;" data-toggle="tooltip" data-placement="right" data-original-title="" title="Search using &quot;author:&quot;, &quot;title:&quot;, or &quot;year:&quot;"></span>
+                	    <span class="glyphicon glyphicon-question-sign" style="font-size:32px;padding-left:8px;color:#1F77B4;" data-toggle="tooltip" data-placement="bottom" data-original-title="" title="Search using &quot;author:&quot;, &quot;title:&quot;, or &quot;year:&quot;"></span>
+                	</div>
+                	<div class="col-xs-1 padding-0">
+                	    <a href="Pubs_basedon_TCIA0618.xml" download><span class="glyphicon glyphicon-download-alt" style="font-size:32px;" data-toggle="tooltip" data-placement="bottom" data-original-title="" title="Download EndNote file"></span></a>
+                	</div>
+                	<div class="col-xs-1 padding-0">
+                        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-stats" style="font-size:32px;" data-backdrop="false" data-toggle="tooltip" data-placement="bottom" data-original-title="" title="View publication statistics"></button>
                 	</div>
             	</div>
             </div>
@@ -411,6 +507,23 @@ paperpile_html = """<!DOCTYPE html>
             </div>
         </div>
 
+        <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+                        <h4 class="modal-title">Publications Over Time</h4>
+                    </div>
+                    <div class="modal-body">
+                        <img src="/static/TCIAGraph.svg">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="container">
             {}
         </div>
@@ -418,7 +531,6 @@ paperpile_html = """<!DOCTYPE html>
     </body>
 </html>
 """.format(keywords_to_add,entry)
-
 
 with open(cwd + "Publications.html","w",encoding="utf8") as f:
     f.write(paperpile_html)
