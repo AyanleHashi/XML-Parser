@@ -145,6 +145,7 @@ paperpile_html = """<!DOCTYPE html>
         <style>
             html {{
                 font-family: "Arial";
+                overflow-y: scroll;
             }}
             periodical {{
                 color: green;
