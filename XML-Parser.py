@@ -445,7 +445,7 @@ paperpile_html = """<!DOCTYPE html>
                         <h4 class="modal-title">Publications Over Time</h4>
                     </div>
                     <div class="modal-body">
-                        <img src="/static/TCIAGraph.svg">
+                        <img src="TCIAGraph.svg">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
