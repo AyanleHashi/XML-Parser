@@ -291,77 +291,7 @@ paperpile_html = """<!DOCTYPE html>
             paginate(elements_per_page);
 
             //Set the cookies if they don't already exist
-/*            if (Cookies.get("COOKIES") == undefined) {{
-                COOKIES["Labels"] = [];
-                Cookies.set("COOKIES",COOKIES,{{expires:365}});
-            }}
-            else {{
-                //Otherwise, load the labels from stored cookies
-                COOKIES = Cookies.getJSON("COOKIES");
-            }}
 
-            //Set the labels that were stored in the cookies
-            Object.keys(COOKIES).forEach(function(element) {{
-                COOKIES[element].forEach(function(label) {{
-                    $("#"+element).append("<div class=\\"draggable-after\\">" + label + "</div>");
-                }});
-            }});
-
-            Object.keys(COOKIES["Labels"]).forEach(function(element){{
-                $("#sidebar").append("<div class=\\"draggable\\" title=\\"Click to drag\\">" + COOKIES["Labels"][element] + "</div><br>");
-            }});
-
-            Cookies.set("COOKIES",COOKIES,{{expires:365}});
-
-            $(".draggable").draggable({{
-                revert: true,
-                revertDuration: 0
-            }});
-
-            $(".droppable").droppable({{
-                activeClass: "active",
-                drop: function (event, ui) {{
-                    //If the label isn't already on the publication, add it
-                    var id = $(this).attr("id");
-
-                    if (!COOKIES.hasOwnProperty(id)) {{
-                        COOKIES[id] = [];
-                    }}
-
-                    if (!COOKIES[id].includes(ui.draggable.text())) {{
-                        $(this).append("<div class=\\"draggable-after\\" title=\\"Click to remove\\">" + ui.draggable.text() + "</div>");
-
-                        //Set the cookie so it remembers the labels on different sessions
-                            if (!COOKIES[id].includes(ui.draggable.text())) {{
-                                COOKIES[id].push(ui.draggable.text());
-                            }}
-
-                        Cookies.set("COOKIES",COOKIES,{{expires:365}});
-                    }}
-                }}
-            }});
-
-            //Remove the label and cookie on click
-          	$(".paper").on("click",".draggable-after",function() {{
-        		COOKIES[$(this).parent().attr("id")].splice(COOKIES[$(this).parent().attr("id")].indexOf($(this).text()),1);
-        	    $(this).remove();
-
-        	    Cookies.set("COOKIES",COOKIES,{{expires:365}});
-        	}});
-
-            //Add a new user-submitted label to the cookie
-            $("#labelSubmit").on("click",function() {{
-                if ($("#labelInput").val().length > 1) {{
-                    if (!COOKIES["Labels"].includes($("#labelInput").val())) {{
-                        COOKIES["Labels"].push($("#labelInput").val());
-                    }}
-                }}
-                else {{
-                    alert("Label length must be 2 or more");
-                }}
-                Cookies.set("COOKIES",COOKIES,{{expires:365}});
-            }});
-*/
             //Temporarily hide any papers that don't contain the text entered in the search bar
             $("#searchbar").on("keyup", function() {{
                 $(".container").find("li").removeClass("active");
