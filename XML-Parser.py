@@ -163,18 +163,19 @@ paperpile_html = """<!DOCTYPE html>
             #wrapper {{
                 position: fixed;
                 top: 0;
-                width: 16vw;
+                width: 18.11vw;
                 height: 100%;
                 background-color: #eee;
                 z-index: 5;
+                right: 0vw;
             }}
             #sidebar {{
                 position: relative;
                 top: 100px;
                 left: 1vw;
-                width: 15vw;
                 height: 91vh;
                 overflow-y: scroll;
+                width: 17vw;
             }}
             #header {{
                 position: fixed;
@@ -199,7 +200,7 @@ paperpile_html = """<!DOCTYPE html>
             .container {{
                 padding-top: 110px;
                 margin-left: 16vw;
-                width: 50vw;
+                width: 65vw;
                 border: 2px solid #ccc;
             }}
             .draggable {{
