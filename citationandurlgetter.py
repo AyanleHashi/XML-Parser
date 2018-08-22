@@ -4,6 +4,7 @@ from time import sleep
 import csv
 import scholar
 
+#Set up the querier
 querier = scholar.ScholarQuerier()
 querier.apply_settings(scholar.ScholarSettings())
 query = scholar.SearchScholarQuery()
@@ -14,10 +15,13 @@ with open("Pubs_basedon_TCIA0618.xml","r",encoding="utf8") as f:
 
 soup = BeautifulSoup(xml,"lxml")
 
+#Get the titles of all publications from the EndNote file
 record_titles = []
 for record in soup.xml.records:
     record_titles.append(fix_text(record.titles.title.text))
 
+#Get any titles that are already in titleinfo.csv, if it exists. If not, then
+#create the file.
 file_titles = []
 try:
     with open("titleinfo.csv","r",encoding="utf8") as f:
@@ -31,6 +35,8 @@ except FileNotFoundError:
     with open("titleinfo.csv","w",encoding="utf8") as f:
         pass
 
+#If the info isn't already in the file, then query Google Scholar for the URL
+#and citation count, and write it into the file.
 with open("titleinfo.csv","a",newline="",encoding="utf8") as f:
     writer = csv.writer(f)
     
@@ -60,8 +66,9 @@ with open("titleinfo.csv","a",newline="",encoding="utf8") as f:
             
             print(record_title)
             print(citations)
-            print(url)
+            print(url + "\n")
             
-            writer.writerow([fix_text(record_title),fix_text(str(citations)),fix_text(url)])
+            writer.writerow([fix_text(record_title),fix_text(str(citations)),
+                             fix_text(url)])
             
             sleep(10)
