@@ -127,9 +127,13 @@ ALL_KEYWORDS = sorted([sub("[\"\\t]","",x.lower()) for x in ALL_KEYWORDS])
 ALL_KEYWORDS.sort(key=Counter(ALL_KEYWORDS).get,reverse=True)
 counter = Counter(ALL_KEYWORDS)
 keywords_to_add = ""
+limit = 0
 for c in counter.keys():
     if counter[c] > 1:
         keywords_to_add += "<button type=\"button\" class=\"btn btn-link sidebar-tag\">" + c + "</button> (" + str(counter[c]) + ")<br>\n"
+        limit += 1
+        if limit == 20:
+            break
 
 paperpile_html = """<!DOCTYPE html>
 <html>
