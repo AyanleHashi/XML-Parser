@@ -124,6 +124,7 @@ for r in records:
     entry += str(r)
 
 ALL_KEYWORDS = sorted([sub("[\"\\t]","",x.lower()) for x in ALL_KEYWORDS])
+ALL_KEYWORDS.sort(key=Counter(ALL_KEYWORDS).get,reverse=True)
 counter = Counter(ALL_KEYWORDS)
 keywords_to_add = ""
 for c in counter.keys():
