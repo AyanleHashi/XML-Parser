@@ -135,7 +135,7 @@ for c in counter.keys():
         if limit == 20:
             break
 
-paperpile_html = """<!DOCTYPE html>
+html_file = """<!DOCTYPE html>
 <html>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="https://wiki.cancerimagingarchive.net/s/en_GB/7400/f2dd15fadfb45568d4c57973599993b8f86142a0/28/_/favicon.ico">
@@ -468,4 +468,4 @@ paperpile_html = """<!DOCTYPE html>
 """.format(keywords_to_add,entry)
 
 with open(cwd + "Publications.html","w",encoding="utf8") as f:
-    f.write(paperpile_html)
+    f.write(html_file)
